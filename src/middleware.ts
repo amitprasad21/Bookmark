@@ -12,7 +12,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
+export function middleware(_request: NextRequest) {
   // You can add custom logic here
   // For example, redirect unauthenticated users to login
   // But with client-side auth, this is optional

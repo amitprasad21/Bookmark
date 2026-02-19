@@ -14,7 +14,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/integrations/supabase/client";
-import type { Tag, TagInsert } from "@/integrations/supabase/types";
+import type { Tag } from "@/integrations/supabase/types";
 import { toast } from "sonner";
 
 const TAG_COLORS = [
@@ -31,7 +31,7 @@ const TAG_COLORS = [
 export function useTags(userId: string | undefined) {
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const supabase = createClient() as any;
 
   useEffect(() => {
     if (!userId) {
@@ -63,7 +63,7 @@ export function useTags(userId: string | undefined) {
               table: "tags",
               filter: `user_id=eq.${userId}`,
             },
-            (payload) => {
+            (payload: any) => {
               if (payload.eventType === "INSERT") {
                 setTags((prev) => [
                   ...prev,
@@ -104,7 +104,6 @@ export function useTags(userId: string | undefined) {
     async (tagName: string, color?: string) => {
       try {
         if (!userId) throw new Error("User not authenticated");
-
         const selectedColor =
           color || TAG_COLORS[Math.floor(Math.random() * TAG_COLORS.length)];
 

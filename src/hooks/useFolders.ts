@@ -15,13 +15,13 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/integrations/supabase/client";
-import type { Folder, FolderInsert } from "@/integrations/supabase/types";
+import type { Folder } from "@/integrations/supabase/types";
 import { toast } from "sonner";
 
 export function useFolders(userId: string | undefined) {
   const [folders, setFolders] = useState<Folder[]>([]);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const supabase = createClient() as any;
 
   useEffect(() => {
     if (!userId) {
@@ -53,7 +53,7 @@ export function useFolders(userId: string | undefined) {
               table: "folders",
               filter: `user_id=eq.${userId}`,
             },
-            (payload) => {
+            (payload: any) => {
               if (payload.eventType === "INSERT") {
                 setFolders((prev) => [
                   ...prev,
@@ -94,7 +94,6 @@ export function useFolders(userId: string | undefined) {
     async (folderName: string) => {
       try {
         if (!userId) throw new Error("User not authenticated");
-
         const { error } = await supabase.from("folders").insert([
           {
             user_id: userId,
