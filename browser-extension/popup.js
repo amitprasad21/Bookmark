@@ -1,6 +1,6 @@
 // Minimal popup script - opens the app with prefilled URL and title
 (function () {
-  const WEB_APP_URL = "http://localhost:3001"; // <- UPDATE for production
+  const WEB_APP_URL = "http://localhost:3000"; // <- UPDATE for production (use your deployed URL)
 
   const isValidUrl = (u) => {
     try {
@@ -44,7 +44,7 @@
 })();
 // Minimal popup script - opens the app with prefilled URL and title
 (function () {
-  const WEB_APP_URL = "http://localhost:3001"; // <- UPDATE for production
+  const WEB_APP_URL = "http://localhost:3000"; // <- UPDATE for production (use your deployed URL)
 
   const isValidUrl = (u) => {
     try {

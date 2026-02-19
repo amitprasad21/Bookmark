@@ -14,13 +14,10 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { Moon, Sun, LogOut } from "lucide-react";
-import { useState } from "react";
 
 export function AppHeader() {
   const { user, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const [showMenu, setShowMenu] = useState(false);
-
   const handleSignOut = async () => {
     try {
       await signOut();
