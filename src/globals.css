@@ -1,0 +1,122 @@
+/**
+ * Global Styles & CSS Variables
+ * 
+ * This file defines:
+ * 1. CSS custom properties (variables) for theming
+ * 2. Dark mode colors (default)
+ * 3. Light mode colors (with .light class)
+ * 4. Global component styles
+ * 5. Scrollbar customization
+ * 
+ * The color scheme uses HSL format for easy manipulation
+ * You can adjust hue, saturation, and lightness independently
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* 
+     * Color palette - Dark Mode (Default)
+     * These CSS variables define the entire color scheme
+     * Format: hsl(hue, saturation%, lightness%)
+     */
+
+    /* Background colors */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    /* Card styling */
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    /* Primary brand color - Blue */
+    --primary: 210 100% 50%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    /* Secondary color - Slate */
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    /* Neutral/Muted colors */
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 13.8% 34.3%;
+
+    /* Accent color - Purple */
+    --accent: 280 85% 50%;
+    --accent-foreground: 210 40% 98%;
+
+    /* Destructive/Error color - Red */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* UI elements */
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+
+    /* Border radius */
+    --radius: 0.5rem;
+  }
+
+  /* Light Mode - Activated when .light class is present */
+  .light {
+    /* Light background colors */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --primary: 210 100% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 280 85% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 215 34.3% 8.9%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rounding-mode" 0;
+  }
+}
+
+/**
+ * Custom scrollbar styling for webkit browsers
+ * Makes scrollbar match dark theme
+ */
+::-webkit-scrollbar {
+  @apply w-2 h-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted/30;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted rounded-full hover:bg-muted/80;
+}
+
+/* Smooth transitions for theme switching */
+html {
+  @apply transition-colors duration-300;
+}
