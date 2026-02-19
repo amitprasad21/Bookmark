@@ -30,6 +30,11 @@ export function useAuth() {
 
   // Initialize auth state on mount
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+
     const initAuth = async () => {
       try {
         // Get current session
@@ -65,6 +70,8 @@ export function useAuth() {
   const signInWithGoogle = useCallback(
     async (returnTo?: string) => {
       try {
+        if (!supabase) throw new Error("Supabase is not configured");
+
         const callbackUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback${
           returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ""
         }`;
@@ -88,6 +95,8 @@ export function useAuth() {
   // Sign out user
   const signOut = useCallback(async () => {
     try {
+      if (!supabase) throw new Error("Supabase is not configured");
+
       await supabase.auth.signOut();
       setUser(null);
       setSession(null);

@@ -16,7 +16,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Bookmark, BookmarkTag, Tag } from "@/integrations/supabase/types";
+import { Bookmark, Tag } from "@/integrations/supabase/types";
 import { ExternalLink, Trash2, Copy, Check } from "lucide-react";
 import { useState } from "react";
 
