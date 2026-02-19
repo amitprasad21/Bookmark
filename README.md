@@ -276,21 +276,6 @@ UPDATE bookmarks SET ... WHERE user_id = auth.uid()
 ```
 
 ---
-
-## 📚 Documentation
-
-### Getting Started
-- **[QUICKSTART.md](QUICKSTART.md)** - 5-minute setup guide
-- **[DATABASE_SETUP.md](DATABASE_SETUP.md)** - Database configuration
-
-### Comprehensive Guides
-- **[COMPLETE_GUIDE.md](COMPLETE_GUIDE.md)** - Full architecture & technical implementation
-- **[DARK_THEME_GUIDE.md](DARK_THEME_GUIDE.md)** - Dark mode system details
-- **[BROWSER_EXTENSION_GUIDE.md](BROWSER_EXTENSION_GUIDE.md)** - Extension setup & customization
-- **[PRODUCTION_AND_EXTENSION_GUIDE.md](PRODUCTION_AND_EXTENSION_GUIDE.md)** - Deployment & distribution
-
----
-
 ## 🎯 How Everything Works
 
 ### Data Flow
