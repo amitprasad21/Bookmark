@@ -1,17 +1,7 @@
 /**
  * useAuth Hook
- * 
+ *
  * Manages user authentication state and operations
- * 
- * Features:
- * - Track user session
- * - Google OAuth sign-in
- * - Sign-out functionality
- * - Auto-refresh token handling
- * - Monitors auth state changes in real-time
- * 
- * Usage:
- *   const { user, session, loading, signInWithGoogle, signOut } = useAuth();
  */
 
 "use client";
@@ -21,6 +11,8 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 
+const AUTH_CALLBACK_PATH = "/auth/callback";
+
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -28,24 +20,53 @@ export function useAuth() {
   const router = useRouter();
   const supabase = createClient();
 
-  // Initialize auth state on mount
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+
     const initAuth = async () => {
       try {
-        // Get current session
+        if (typeof window !== "undefined") {
+          const currentUrl = new URL(window.location.href);
+          const authCode = currentUrl.searchParams.get("code");
+
+          // If provider redirected to a non-callback path with `?code=...`,
+          // normalize to /auth/callback so exchange happens in one place.
+          if (authCode && currentUrl.pathname !== AUTH_CALLBACK_PATH) {
+            const returnParams = new URLSearchParams(currentUrl.search);
+            returnParams.delete("code");
+            returnParams.delete("state");
+            returnParams.delete("returnTo");
+
+            const returnToPath = returnParams.toString()
+              ? `${currentUrl.pathname}?${returnParams.toString()}`
+              : currentUrl.pathname;
+
+            const callbackUrl = new URL(AUTH_CALLBACK_PATH, currentUrl.origin);
+            callbackUrl.searchParams.set("code", authCode);
+            if (returnToPath && returnToPath !== "/") {
+              callbackUrl.searchParams.set("returnTo", returnToPath);
+            }
+
+            router.replace(`${callbackUrl.pathname}${callbackUrl.search}`);
+            return;
+          }
+        }
+
         const {
-          data: { session },
+          data: { session: currentSession },
         } = await supabase.auth.getSession();
 
-        setSession(session);
-        setUser(session?.user ?? null);
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
 
-        // Listen for auth state changes
         const {
           data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-          setSession(session);
-          setUser(session?.user ?? null);
+        } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+          setSession(nextSession);
+          setUser(nextSession?.user ?? null);
         });
 
         return () => subscription?.unsubscribe();
@@ -57,22 +78,32 @@ export function useAuth() {
     };
 
     initAuth();
-  }, [supabase]);
+  }, [router, supabase]);
 
-  // Sign in with Google OAuth
-  // Accepts an optional `returnTo` path which will be attached as a query
-  // parameter to the callback so the app can resume the flow after login.
   const signInWithGoogle = useCallback(
     async (returnTo?: string) => {
       try {
-        const callbackUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback${
-          returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ""
-        }`;
+        if (!supabase) throw new Error("Supabase is not configured");
+
+        const appOrigin =
+          typeof window !== "undefined"
+            ? window.location.origin
+            : process.env.NEXT_PUBLIC_APP_URL;
+
+        if (!appOrigin) {
+          throw new Error("Missing app origin for OAuth redirect");
+        }
+
+        const callbackUrl = new URL(AUTH_CALLBACK_PATH, appOrigin);
+
+        if (returnTo && returnTo !== AUTH_CALLBACK_PATH) {
+          callbackUrl.searchParams.set("returnTo", returnTo);
+        }
 
         const { error } = await supabase.auth.signInWithOAuth({
           provider: "google",
           options: {
-            redirectTo: callbackUrl,
+            redirectTo: callbackUrl.toString(),
           },
         });
 
@@ -85,9 +116,10 @@ export function useAuth() {
     [supabase]
   );
 
-  // Sign out user
   const signOut = useCallback(async () => {
     try {
+      if (!supabase) throw new Error("Supabase is not configured");
+
       await supabase.auth.signOut();
       setUser(null);
       setSession(null);

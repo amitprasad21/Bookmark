@@ -44,14 +44,14 @@ browser-extension/
 
 #### popup.js
 ```js
-const WEB_APP_URL = "http://localhost:3001";
+const DEFAULT_WEB_APP_URL = "https://bookmark-tawny-nine.vercel.app";
 const isValidUrl = (u) => { try { const parsed = new URL(u); return parsed.protocol === "http:" || parsed.protocol === "https:"; } catch { return false; } };
 document.getElementById("save").addEventListener("click", async () => {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   if (!tab || !isValidUrl(tab.url)) return;
   const url = encodeURIComponent(tab.url);
   const title = encodeURIComponent(tab.title || "");
-  const target = `${WEB_APP_URL}/bookmark/add?url=${url}&title=${title}&source=extension-popup`;
+  const target = `${DEFAULT_WEB_APP_URL}/bookmark/add?url=${url}&title=${title}&source=extension-popup`;
   await chrome.tabs.create({ url: target });
 });
 ```
@@ -77,3 +77,9 @@ document.getElementById("save").addEventListener("click", async () => {
 ---
 
 **For production, update `WEB_APP_URL` in popup.js to your deployed app URL.**
+
+
+### Configuring Web App URL
+- The extension now defaults to `https://bookmark-tawny-nine.vercel.app`.
+- You can optionally store a custom URL in `chrome.storage.sync` under key `webAppUrl` for local/dev use.
+- If the stored value is invalid, it automatically falls back to the production URL.
