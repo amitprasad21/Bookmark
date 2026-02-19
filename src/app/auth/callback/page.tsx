@@ -28,30 +28,10 @@ function AuthCallbackContent() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const run = async () => {
-      const supabase = createClient();
-      if (!supabase) {
-        router.replace("/");
-        return;
-      }
-
-      const code = searchParams.get("code");
-      const safeReturnTo = getSafeReturnTo(searchParams.get("returnTo"));
-
-      try {
-        if (code) {
-          const { error } = await supabase.auth.exchangeCodeForSession(code);
-          if (error) {
-            console.error("OAuth code exchange error:", error);
-          }
-        }
-      } finally {
-        router.replace(safeReturnTo);
-      }
-    };
-
-    run();
-  }, [router, searchParams]);
+    if (!loading && user) {
+      router.push(getSafeReturnTo(searchParams.get("returnTo")));
+    }
+  }, [loading, router, searchParams, user]);
 
   return (
     <div className="flex min-h-screen items-center justify-center">
