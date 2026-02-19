@@ -39,6 +39,22 @@ export function useAuth() {
 
     const initAuth = async () => {
       try {
+        if (typeof window !== "undefined") {
+          const currentUrl = new URL(window.location.href);
+          const authCode = currentUrl.searchParams.get("code");
+
+          if (authCode) {
+            const { error } = await supabase.auth.exchangeCodeForSession(authCode);
+            if (error) {
+              console.error("OAuth code exchange error:", error);
+            }
+
+            currentUrl.searchParams.delete("code");
+            currentUrl.searchParams.delete("state");
+            window.history.replaceState({}, "", `${currentUrl.pathname}${currentUrl.search}`);
+          }
+        }
+
         const {
           data: { session },
         } = await supabase.auth.getSession();
@@ -69,7 +85,15 @@ export function useAuth() {
       try {
         if (!supabase) throw new Error("Supabase is not configured");
 
-        const appOrigin = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+        const appOrigin =
+          typeof window !== "undefined"
+            ? window.location.origin
+            : process.env.NEXT_PUBLIC_APP_URL;
+
+        if (!appOrigin) {
+          throw new Error("Missing app origin for OAuth redirect");
+        }
+
         const callbackUrl = new URL(AUTH_CALLBACK_PATH, appOrigin);
 
         if (returnTo && returnTo !== AUTH_CALLBACK_PATH) {
