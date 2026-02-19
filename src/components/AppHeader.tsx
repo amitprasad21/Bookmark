@@ -13,7 +13,7 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
-import { Moon, Sun, LogOut, Menu } from "lucide-react";
+import { Moon, Sun, LogOut } from "lucide-react";
 import { useState } from "react";
 
 export function AppHeader() {
