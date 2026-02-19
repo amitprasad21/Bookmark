@@ -51,7 +51,6 @@ export function useAuth() {
 
             currentUrl.searchParams.delete("code");
             currentUrl.searchParams.delete("state");
-            currentUrl.searchParams.delete("returnTo");
             window.history.replaceState({}, "", `${currentUrl.pathname}${currentUrl.search}`);
           }
         }
