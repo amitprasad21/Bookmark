@@ -21,6 +21,8 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 
+const AUTH_CALLBACK_PATH = "/auth/callback";
+
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -30,9 +32,13 @@ export function useAuth() {
 
   // Initialize auth state on mount
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+
     const initAuth = async () => {
       try {
-        // Get current session
         const {
           data: { session },
         } = await supabase.auth.getSession();
@@ -40,12 +46,11 @@ export function useAuth() {
         setSession(session);
         setUser(session?.user ?? null);
 
-        // Listen for auth state changes
         const {
           data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event, session) => {
-          setSession(session);
-          setUser(session?.user ?? null);
+        } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+          setSession(nextSession);
+          setUser(nextSession?.user ?? null);
         });
 
         return () => subscription?.unsubscribe();
@@ -59,20 +64,22 @@ export function useAuth() {
     initAuth();
   }, [supabase]);
 
-  // Sign in with Google OAuth
-  // Accepts an optional `returnTo` path which will be attached as a query
-  // parameter to the callback so the app can resume the flow after login.
   const signInWithGoogle = useCallback(
     async (returnTo?: string) => {
       try {
-        const callbackUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback${
-          returnTo ? `?returnTo=${encodeURIComponent(returnTo)}` : ""
-        }`;
+        if (!supabase) throw new Error("Supabase is not configured");
+
+        const appOrigin = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+        const callbackUrl = new URL(AUTH_CALLBACK_PATH, appOrigin);
+
+        if (returnTo && returnTo !== AUTH_CALLBACK_PATH) {
+          callbackUrl.searchParams.set("returnTo", returnTo);
+        }
 
         const { error } = await supabase.auth.signInWithOAuth({
           provider: "google",
           options: {
-            redirectTo: callbackUrl,
+            redirectTo: callbackUrl.toString(),
           },
         });
 
@@ -85,9 +92,10 @@ export function useAuth() {
     [supabase]
   );
 
-  // Sign out user
   const signOut = useCallback(async () => {
     try {
+      if (!supabase) throw new Error("Supabase is not configured");
+
       await supabase.auth.signOut();
       setUser(null);
       setSession(null);
