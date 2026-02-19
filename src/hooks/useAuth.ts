@@ -1,17 +1,7 @@
 /**
  * useAuth Hook
- * 
+ *
  * Manages user authentication state and operations
- * 
- * Features:
- * - Track user session
- * - Google OAuth sign-in
- * - Sign-out functionality
- * - Auto-refresh token handling
- * - Monitors auth state changes in real-time
- * 
- * Usage:
- *   const { user, session, loading, signInWithGoogle, signOut } = useAuth();
  */
 
 "use client";
@@ -30,7 +20,6 @@ export function useAuth() {
   const router = useRouter();
   const supabase = createClient();
 
-  // Initialize auth state on mount
   useEffect(() => {
     if (!supabase) {
       setLoading(false);
@@ -56,11 +45,11 @@ export function useAuth() {
         }
 
         const {
-          data: { session },
+          data: { session: currentSession },
         } = await supabase.auth.getSession();
 
-        setSession(session);
-        setUser(session?.user ?? null);
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
 
         const {
           data: { subscription },
@@ -78,7 +67,7 @@ export function useAuth() {
     };
 
     initAuth();
-  }, [supabase]);
+  }, [router, supabase]);
 
   const signInWithGoogle = useCallback(
     async (returnTo?: string) => {

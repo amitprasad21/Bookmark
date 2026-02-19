@@ -8,8 +8,8 @@
 
 import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
 import { Loader2 } from "lucide-react";
+import { createClient } from "@/integrations/supabase/client";
 
 function getSafeReturnTo(returnTo: string | null) {
   if (!returnTo || !returnTo.startsWith("/")) {
@@ -25,7 +25,6 @@ function getSafeReturnTo(returnTo: string | null) {
 
 function AuthCallbackContent() {
   const router = useRouter();
-  const { user, loading } = useAuth();
   const searchParams = useSearchParams();
 
   useEffect(() => {
