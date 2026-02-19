@@ -23,7 +23,21 @@
 5. Click "Deploy". Your app will be live at `https://your-app-name.vercel.app`.
 6. Update the extension's `popup.js` `WEB_APP_URL` to your deployed URL.
 
-## 4. Publishing the Chrome Extension
+7. In **Supabase Dashboard → Authentication → URL Configuration**, set:
+   - **Site URL** = your deployed app URL (for example `https://bookmark-tawny-nine.vercel.app`)
+   - Add Redirect URLs for both local and prod:
+     - `http://localhost:3000/auth/callback`
+     - `http://localhost:3000`
+     - `https://your-production-domain/auth/callback`
+     - `https://your-production-domain`
+
+
+## 4. OAuth Redirect Troubleshooting
+- If you see URLs like `http://localhost:3000/?code=...` on production, Supabase Auth URLs are still pointing to localhost.
+- Fix the Supabase URL Configuration first, then redeploy from Vercel so env changes are active.
+- If using the extension, make sure `browser-extension/popup.js` points to your deployed app, not localhost.
+
+## 5. Publishing the Chrome Extension
 1. Zip the `browser-extension` folder (manifest, popup, icons).
 2. Go to https://chrome.google.com/webstore/devconsole
 3. Click "Add New Item" and upload your zip.
@@ -31,14 +45,14 @@
 5. For Edge, Firefox, Opera: use their respective addon stores.
 6. After approval, users can install from the store.
 
-## 5. Edge Cases & Security
+## 6. Edge Cases & Security
 - Only http(s) URLs are allowed (no chrome://, file://, etc.).
 - No Supabase keys or secrets are ever in the extension.
 - All authentication and database logic is handled by the web app.
 - Extension only passes URL/title via query params.
 - Real-time sync, folder/tag filters, and AI features are not affected by the extension.
 
-## 6. Updating the Extension for All Users
+## 7. Updating the Extension for All Users
 - After publishing, users will get updates automatically from the Chrome Web Store.
 - For manual testing, use "Load unpacked" in `chrome://extensions`.
 - Always update `WEB_APP_URL` in `popup.js` for production.

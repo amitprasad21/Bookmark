@@ -3,13 +3,6 @@
  * 
  * Displays when user is not authenticated
  * Provides Google OAuth sign-in button
- * 
- * Flow:
- * 1. User clicks "Sign in with Google"
- * 2. Redirected to Google OAuth consent
- * 3. After approval, user returns to app
- * 4. Session is established in Supabase
- * 5. User is logged in
  */
 
 "use client";
@@ -21,22 +14,30 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
+const AUTH_QUERY_PARAMS = new Set(["code", "state", "returnTo"]);
+
 export function LoginPage() {
   const { signInWithGoogle } = useAuth();
   const [loading, setLoading] = useState(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const buildReturnPath = () => {
+    if (!pathname || pathname.startsWith("/auth/callback")) {
+      return "/";
+    }
+
+    const params = new URLSearchParams(searchParams?.toString() || "");
+    AUTH_QUERY_PARAMS.forEach((param) => params.delete(param));
+
+    const query = params.toString();
+    return query ? `${pathname}?${query}` : pathname;
+  };
+
   const handleGoogleSignIn = async () => {
     try {
       setLoading(true);
-      // If the login page was reached with query params (e.g. from extension)
-      // preserve the current path so we can resume after OAuth.
-      const path = pathname
-        ? `${pathname}${searchParams ? `?${searchParams.toString()}` : ""}`
-        : undefined;
-
-      await signInWithGoogle(path);
+      await signInWithGoogle(buildReturnPath());
     } catch (error) {
       console.error("Sign-in error:", error);
     } finally {

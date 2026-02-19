@@ -29,7 +29,7 @@ import { toast } from "sonner";
 export function useBookmarks(userId: string | undefined) {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const supabase = createClient() as any;
 
   // Fetch bookmarks and subscribe to changes
   useEffect(() => {
@@ -63,7 +63,7 @@ export function useBookmarks(userId: string | undefined) {
               table: "bookmarks",
               filter: `user_id=eq.${userId}`,
             },
-            (payload) => {
+            (payload: any) => {
               setBookmarks((prev) => [payload.new as Bookmark, ...prev]);
             }
           )
@@ -75,7 +75,7 @@ export function useBookmarks(userId: string | undefined) {
               table: "bookmarks",
               filter: `user_id=eq.${userId}`,
             },
-            (payload) => {
+            (payload: any) => {
               setBookmarks((prev) =>
                 prev.map((b) =>
                   b.id === (payload.new as Bookmark).id
@@ -93,7 +93,7 @@ export function useBookmarks(userId: string | undefined) {
               table: "bookmarks",
               filter: `user_id=eq.${userId}`,
             },
-            (payload) => {
+            (payload: any) => {
               setBookmarks((prev) =>
                 prev.filter((b) => b.id !== (payload.old as Bookmark).id)
               );
