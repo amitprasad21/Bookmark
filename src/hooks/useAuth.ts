@@ -32,26 +32,15 @@ export function useAuth() {
           const currentUrl = new URL(window.location.href);
           const authCode = currentUrl.searchParams.get("code");
 
-          // If provider redirected to a non-callback path with `?code=...`,
-          // normalize to /auth/callback so exchange happens in one place.
-          if (authCode && currentUrl.pathname !== AUTH_CALLBACK_PATH) {
-            const returnParams = new URLSearchParams(currentUrl.search);
-            returnParams.delete("code");
-            returnParams.delete("state");
-            returnParams.delete("returnTo");
-
-            const returnToPath = returnParams.toString()
-              ? `${currentUrl.pathname}?${returnParams.toString()}`
-              : currentUrl.pathname;
-
-            const callbackUrl = new URL(AUTH_CALLBACK_PATH, currentUrl.origin);
-            callbackUrl.searchParams.set("code", authCode);
-            if (returnToPath && returnToPath !== "/") {
-              callbackUrl.searchParams.set("returnTo", returnToPath);
+          if (authCode) {
+            const { error } = await supabase.auth.exchangeCodeForSession(authCode);
+            if (error) {
+              console.error("OAuth code exchange error:", error);
             }
 
-            router.replace(`${callbackUrl.pathname}${callbackUrl.search}`);
-            return;
+            currentUrl.searchParams.delete("code");
+            currentUrl.searchParams.delete("state");
+            window.history.replaceState({}, "", `${currentUrl.pathname}${currentUrl.search}`);
           }
         }
 

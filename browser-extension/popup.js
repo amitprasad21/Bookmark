@@ -1,6 +1,6 @@
 // Minimal popup script - opens the app with prefilled URL and title
 (function () {
-  const DEFAULT_WEB_APP_URL = "https://bookmark-tawny-nine.vercel.app";
+  const WEB_APP_URL = "http://localhost:3000"; // <- UPDATE for production (use your deployed URL)
 
   const isValidUrl = (u) => {
     try {
@@ -20,7 +20,11 @@
     } catch (e) {
       return DEFAULT_WEB_APP_URL;
     }
-  };
+  });
+})();
+// Minimal popup script - opens the app with prefilled URL and title
+(function () {
+  const WEB_APP_URL = "http://localhost:3000"; // <- UPDATE for production (use your deployed URL)
 
   const getWebAppUrl = async () => {
     try {

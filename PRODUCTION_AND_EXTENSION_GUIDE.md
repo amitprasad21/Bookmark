@@ -36,7 +36,6 @@
 - If you see URLs like `http://localhost:3000/?code=...` on production, Supabase Auth URLs are still pointing to localhost.
 - Fix the Supabase URL Configuration first, then redeploy from Vercel so env changes are active.
 - If using the extension, make sure `browser-extension/popup.js` points to your deployed app, not localhost.
-- If login opens `localhost` unexpectedly, your extension URL is misconfigured. Update extension `WEB_APP_URL` / `webAppUrl` to your deployed domain.
 
 ## 5. Publishing the Chrome Extension
 1. Zip the `browser-extension` folder (manifest, popup, icons).
