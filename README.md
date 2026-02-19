@@ -276,21 +276,6 @@ UPDATE bookmarks SET ... WHERE user_id = auth.uid()
 ```
 
 ---
-
-## 📚 Documentation
-
-### Getting Started
-- **[QUICKSTART.md](QUICKSTART.md)** - 5-minute setup guide
-- **[DATABASE_SETUP.md](DATABASE_SETUP.md)** - Database configuration
-
-### Comprehensive Guides
-- **[COMPLETE_GUIDE.md](COMPLETE_GUIDE.md)** - Full architecture & technical implementation
-- **[DARK_THEME_GUIDE.md](DARK_THEME_GUIDE.md)** - Dark mode system details
-- **[BROWSER_EXTENSION_GUIDE.md](BROWSER_EXTENSION_GUIDE.md)** - Extension setup & customization
-- **[PRODUCTION_AND_EXTENSION_GUIDE.md](PRODUCTION_AND_EXTENSION_GUIDE.md)** - Deployment & distribution
-
----
-
 ## 🎯 How Everything Works
 
 ### Data Flow
@@ -464,20 +449,6 @@ See [PRODUCTION_AND_EXTENSION_GUIDE.md](PRODUCTION_AND_EXTENSION_GUIDE.md) for d
 See **[COMPLETE_GUIDE.md](COMPLETE_GUIDE.md)** for detailed troubleshooting section.
 
 ---
-
-## 🎓 Learning Resources
-
-### Understanding the Architecture
-- [COMPLETE_GUIDE.md](COMPLETE_GUIDE.md) - Full technical breakdown of how everything works
-- [DATABASE_SETUP.md](DATABASE_SETUP.md) - Database schema explanation
-
-### Quick Setup
-- [QUICKSTART.md](QUICKSTART.md) - Get running in 5 minutes
-
-### Specific Features
-- [DARK_THEME_GUIDE.md](DARK_THEME_GUIDE.md) - Dark mode system implementation
-- [BROWSER_EXTENSION_GUIDE.md](BROWSER_EXTENSION_GUIDE.md) - Browser extension details
-
 ### External Documentation
 - [Next.js Documentation](https://nextjs.org/docs) - Framework docs
 - [Supabase Docs](https://supabase.com/docs) - Backend setup
@@ -513,16 +484,6 @@ See **[COMPLETE_GUIDE.md](COMPLETE_GUIDE.md)** for detailed troubleshooting sect
 
 ---
 
-## 🎉 Next Steps
-
-1. **Read [QUICKSTART.md](QUICKSTART.md)** to get running in 5 minutes
-2. **Explore [COMPLETE_GUIDE.md](COMPLETE_GUIDE.md)** to understand the full system
-3. **Review the code** - Look at `src/hooks/` to understand data flow
-4. **Customize** - Change colors in `src/globals.css`, add new features
-5. **Deploy** - Follow [PRODUCTION_AND_EXTENSION_GUIDE.md](PRODUCTION_AND_EXTENSION_GUIDE.md)
-
----
-
 ## 🤝 Contributing
 
 This is a learning/reference project. Feel free to:
@@ -534,8 +495,7 @@ This is a learning/reference project. Feel free to:
 ---
 
 ## 📄 License
-
-MIT License - Use freely in your own projects
+all right reversed by me
 
 ---
 
